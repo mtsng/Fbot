@@ -63,6 +63,11 @@ def remove_submission_id(posts_replied_to, submission_id):
 	if submission_id in posts_replied_to:
 		posts_replied_to.remove(submission_id)
 
+#removes post from subreddit due to being un-flaired for a period of time
+def remove_post(submission, posts_replied_to):
+			remove_submission_id(posts_replied_to, submission.id)
+			submission.mod.remove()
+		
 #return true if the flair is valid, otherwise false					
 def check_valid_flair(flair):
 	
@@ -101,8 +106,8 @@ def check_for_flair(submission, posts_replied_to, message, time_limit, drop_time
 
 
 	#if the post goes unflaired for a certain amount of time, the bot just stops checking on the post for flairs
-	if time_diff >= drop_time_limit:
-		remove_submission_id(posts_replied_to, submission.id)
+	if submission.link_flair_text is None and time_diff >= drop_time_limit:
+		remove_post(submission, posts_replied_to)
 		return
 	
 	#if the post has not been visited and time and flair conditions are true, the bot comments and adds it to the visited list
@@ -121,8 +126,8 @@ def main():
 	subreddit_name = "fgobottest"
 	post_limit = 5 #number of posts to be checked at a time
 	time_limit = 180 #time limit (in seconds) for unflaired post before bot comment
-	drop_time_limit = 7200 #time limit (in seconds) for bot to stop checking a post for a flair
-	message = "Please Flair" #Bot message
+	drop_time_limit = 3600 #time limit (in seconds) for bot to stop checking a post for a flair
+	message = "**Please Flair**" #Bot message
 
 	#Do not change below here unless you know your stuff
 	reddit = praw.Reddit(bot)
