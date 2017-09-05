@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 #This bot is based on the tutorial by shantnu
 #Check out his tutorial at: pythonforengineers.com/build-a-reddit-bot-part-1
 #Check out John Huttlinger too for his flair bot: github.com/JBHUTT09
@@ -17,6 +18,8 @@ flairs = {'JP News': 's', 'JP Discussion': 's', 'JP PSA': 's', 'JP Spoilers': 's
 	'PSA': 'k', 'Rumor': 'c', 'WEEKLY RANT': 'j', 'Translated': 'f', 'Story Translation': 'i', 'Discussion': 'i',
 	'Poll': 'i', 'Moderator': 'a', 'Maintenance': 'c', 'Stream': 'b', 'OC': 'b'}
 
+
+bot_name = "TamamoShark"
 
 #handle ratelimit issues by bboe
 def handle_ratelimit(func, *args, **kwargs):
@@ -78,9 +81,15 @@ def check_valid_flair(flair):
 
 #checks if the user already commented a flair and flairs the post for them
 def check_flair_helper(submission, posts_replied_to):
+        #holds the bot comment
+        bot_comment = None
 
 	#loops through the top level comments of the post	
 	for top_level_comment in submission.comments.list():
+                #saves the bot comment in case the OP replied to the bot with a flair
+                if top_level_comment.author == bot_name:
+                    bot_comment = top_level_comment
+                
 		#checks the comment to see if it has the same author as the post and if they have potential flair
 		if top_level_comment.author == submission.author and re.search("^\[.*\]$", top_level_comment.body):
 			flair_comment = top_level_comment.body
@@ -88,13 +97,26 @@ def check_flair_helper(submission, posts_replied_to):
 			
 			#if the flair is valid, the post is flaired, otherwise informt he post of the incorrect flair
 			if(check_valid_flair(flair)):
-				top_level_comment.reply("Post has been flaired: " + flair)
+				top_level_comment.reply(u"頑張ります、せんぱい！ " + flair)
 				submission.mod.flair(text=flair, css_class=flairs[flair])
 				remove_submission_id(posts_replied_to, submission.id)
 			
 				return True
-		#	else:
-		#		top_level_comment.reply("Incorrect flair. Please flair manually.")
+
+        #Scans second level comment for OP reply to get flair
+        if bot_comment is not None:
+            for second_level_comment in bot_comment.replies.list():
+                if second_level_comment.author == submission.author and re.search("^\[.*\]$", second_level_comment.body):
+                    flair_comment = second_level_comment.body
+                    flair = flair_comment[1:len(flair_comment) - 1]
+
+                    if(check_valid_flair(flair)):
+                        second_level_comment.reply(u"頑張ります、せんぱい！" + flair)
+                        submission.mod.flair(text=flair, css_class=flairs[flair])
+                        remove_submission_id(posts_replied_to, submission.id)
+
+                        return True
+
 	return False
 
 #checks to see if post is flaired and the age of the post; if the post is "old" enough and unflaired, the bot comments;		
