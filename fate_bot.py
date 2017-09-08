@@ -15,7 +15,7 @@ import sys
 flairs = {'JP News': 's', 'JP Discussion': 's', 'JP PSA': 's', 'JP Spoilers': 's', 'NA News': 't', 'NA PSA': 't',
 	'NA Spoilers': 't', 'NA Discussion': 't', 'News': 'd', 'Tips & Tricks': 'i', 'Fluff': 'b', 'Comic': 'b', 'Guide': 'i', 
 	'PSA': 'k', 'Rumor': 'c', 'WEEKLY RANT': 'j', 'Translated': 'f', 'Story Translation': 'i', 'Discussion': 'i',
-	'Poll': 'i', 'Moderator': 'a', 'Maintenance': 'c', 'Stream': 'b', 'OC': 'b'}
+	'Poll': 'i', 'Moderator': 'a', 'Maintenance': 'c', 'Stream': 'a', 'OC': 'b'}
 
 
 bot_name = "TamamoShark"
@@ -49,8 +49,17 @@ def timestamp_to_UTC(timestamp):
 	return datetime.datetime.utcfromtimestamp(timestamp)
 
 #checks for flair comments from post author
-def check_flair_comments(submission, posts_replied_to):
+def check_flair_comments(submission, posts_replied_to, drop_time_limit):
+        #time of the creation of the post
+        post_time = timestamp_to_UTC(submission.created_utc)
+        #the number of seconds since the creation of the post
+        time_diff = cal_time_diff(post_time)
 
+        #if the post goes unflaired for a certain amount of time, the bot just stops checking on the post for flairs
+        if submission.link_flair_text == "New Post" and time_diff >= drop_time_limit:
+            remove_post(submission, posts_replied_to)
+            return
+        
 	#if user flairs post, remove from posts_replied_to text file to reduce the amount of work
 	if submission.link_flair_text != "New Post":
 		remove_submission_id(posts_replied_to, submission.id)
@@ -82,6 +91,8 @@ def check_valid_flair(flair):
 def check_flair_helper(submission, posts_replied_to):
         #holds the bot comment
         bot_comment = None
+        #holds reply message
+        reply_message = "I've done as you've asked, Senpai. Please remember to flair next time, unless you're a mobile user. Please continue to request my assistance in the future if that is the case.[](#thankyou)\n\n"
 
 	#loops through the top level comments of the post
         submission.comments.replace_more(limit=0) #submission.comments.list() shows all the comments, no matter the depth
@@ -97,7 +108,7 @@ def check_flair_helper(submission, posts_replied_to):
 			
 			#if the flair is valid, the post is flaired, otherwise informt he post of the incorrect flair
 			if(check_valid_flair(flair)):
-				top_level_comment.reply("I did it! Or I would have if I wasn't still in training! " + flair)
+				top_level_comment.reply(reply_message + flair)
 				submission.mod.flair(text=flair, css_class=flairs[flair])
 				remove_submission_id(posts_replied_to, submission.id)
 			
@@ -112,7 +123,7 @@ def check_flair_helper(submission, posts_replied_to):
                     flair = flair_comment[1:len(flair_comment) - 1]
 
                     if(check_valid_flair(flair)):
-                        second_level_comment.reply("I did it! Or I would have if I wasn't still in training! " + flair)
+                        second_level_comment.reply(reply_message + flair)
                         submission.mod.flair(text=flair, css_class=flairs[flair])
                         remove_submission_id(posts_replied_to, submission.id)
 
@@ -150,7 +161,7 @@ def main():
 	post_limit = 5 #number of posts to be checked at a time
 	time_limit = 180 #time limit (in seconds) for unflaired post before bot comment
 	drop_time_limit = 3600 #time limit (in seconds) for bot to stop checking a post for a flair
-	message = "**Please Flair**" #Bot message
+        message = "Senpai! It seems you've forgotten to properly flair your post, but this kouhai will gladly do it for you. Simply reply to my comment with one of these [flairs](https://i.imgur.com/aMoZ8cl.png) and I'll change it myself. Just put the flair title inside brackets, like so '[Fluff]'.\n\n**I'm a bot-in-training, if you would like to help in my training please reply to me with your desired flair.\nThat fake kouhai will [never see it coming](https://www.myinstants.com/instant/last-surprise-53793/), Senpai**" #Bot message
 
 	#Do not change below here unless you know your stuff
 	reddit = praw.Reddit(bot)
@@ -178,7 +189,7 @@ def main():
 		#loops through the visited, unflaired posts for flair comments
 		for post_id in posts_replied_to:
 			missing_flair_post = reddit.submission(post_id)
-			handle_ratelimit(check_flair_comments, missing_flair_post, temp_posts_replied_to)
+			handle_ratelimit(check_flair_comments, missing_flair_post, temp_posts_replied_to, drop_time_limit)
 
 	except Exception:
 		sys.exc_clear()
