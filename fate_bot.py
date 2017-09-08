@@ -18,7 +18,7 @@ flairs = {'JP News': 's', 'JP Discussion': 's', 'JP PSA': 's', 'JP Spoilers': 's
 	'Poll': 'i', 'Moderator': 'a', 'Maintenance': 'c', 'Stream': 'a', 'OC': 'b'}
 
 
-bot_name = "TamamoShark"
+bot_name = "Mashu_Kyrielite"
 
 #handle ratelimit issues by bboe
 def handle_ratelimit(func, *args, **kwargs):
@@ -157,7 +157,7 @@ def check_for_flair(submission, posts_replied_to, message, time_limit, drop_time
 #Main Function
 def main():
 	bot = 'bot1'
-	subreddit_name = "fgobottest"
+	subreddit_name = "grandorder"
 	post_limit = 5 #number of posts to be checked at a time
 	time_limit = 180 #time limit (in seconds) for unflaired post before bot comment
 	drop_time_limit = 3600 #time limit (in seconds) for bot to stop checking a post for a flair
