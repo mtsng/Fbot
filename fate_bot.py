@@ -161,7 +161,7 @@ def main():
 	post_limit = 5 #number of posts to be checked at a time
 	time_limit = 180 #time limit (in seconds) for unflaired post before bot comment
 	drop_time_limit = 3600 #time limit (in seconds) for bot to stop checking a post for a flair
-        message = "Senpai! It seems you've forgotten to properly flair your post, but this kouhai will gladly do it for you. Simply reply to my comment with one of these [flairs](https://i.imgur.com/aMoZ8cl.png) and I'll change it myself. Just put the flair title inside brackets, like so '[Fluff]'.\n\n**I'm a bot-in-training, if you would like to help in my training please reply to me with your desired flair.\nThat fake kouhai will [never see it coming](https://www.myinstants.com/instant/last-surprise-53793/), Senpai**" #Bot message
+        message = "Senpai! It seems you've forgotten to properly flair your post, but this kouhai will gladly do it for you. Simply reply to my comment with one of these [flairs](https://i.imgur.com/aMoZ8cl.png) and I'll change it myself. Just put the flair title inside brackets, like so '[Fluff]'.\n\n**I'm a bot-in-training, if you would like to help in my training please reply to me with your desired flair.\nThat fake kouhai will [never see it coming](https://www.myinstants.com/instant/last-surprise-53793/), Senpai.**" #Bot message
 
 	#Do not change below here unless you know your stuff
 	reddit = praw.Reddit(bot)
