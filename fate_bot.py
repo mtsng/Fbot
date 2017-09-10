@@ -56,9 +56,9 @@ def check_flair_comments(submission, posts_replied_to, drop_time_limit):
         time_diff = cal_time_diff(post_time)
 
         #if the post goes unflaired for a certain amount of time, the bot just stops checking on the post for flairs
-        if submission.link_flair_text == "New Post" and time_diff >= drop_time_limit:
-            remove_post(submission, posts_replied_to)
-            return
+        if submission.link_flair_text is None or (submission.link_flair_text == "New Post" and time_diff >= drop_time_limit):
+		remove_post(submission, posts_replied_to)
+		return
         
 	#if user flairs post, remove from posts_replied_to text file to reduce the amount of work
 	if submission.link_flair_text != "New Post":
@@ -76,8 +76,8 @@ def remove_submission_id(posts_replied_to, submission_id):
 
 #removes post from subreddit due to being un-flaired for a period of time
 def remove_post(submission, posts_replied_to):
-			remove_submission_id(posts_replied_to, submission.id)
-			submission.mod.remove()
+	remove_submission_id(posts_replied_to, submission.id)
+	submission.mod.remove()
 		
 #return true if the flair is valid, otherwise false					
 def check_valid_flair(flair):
@@ -140,7 +140,7 @@ def check_for_flair(submission, posts_replied_to, message, time_limit, drop_time
 
 
 	#if the post goes unflaired for a certain amount of time, the bot just stops checking on the post for flairs
-	if submission.link_flair_text == "New Post" and time_diff >= drop_time_limit:
+	if submission.link_flair_text is None or (submission.link_flair_text == "New Post" and time_diff >= drop_time_limit):
 		remove_post(submission, posts_replied_to)
 		return
 	
@@ -171,6 +171,7 @@ def main():
 	if not os.path.isfile("posts_replied_to.txt"):
 		#if file does not exist, create a new list
 		posts_replied_to = []
+		temp_posts_replied_to = []
 
 	else:
 		#opens exisitng file and creates a list of content
