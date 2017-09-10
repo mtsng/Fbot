@@ -92,7 +92,7 @@ def check_flair_helper(submission, posts_replied_to):
         #holds the bot comment
         bot_comment = None
         #holds reply message
-        reply_message = "I've done as you've asked, Senpai. Please remember to flair next time, unless you're a mobile user. Please continue to request my assistance in the future if that is the case.[](#thankyou)\n\n"
+        reply_message = "I've done as you've asked, Senpai. Please remember to flair next time, unless you're a mobile user. Please continue to request my assistance in the future if that is the case.\n\n[](#thankyou)  "
 
 	#loops through the top level comments of the post
         submission.comments.replace_more(limit=0) #submission.comments.list() shows all the comments, no matter the depth
@@ -102,11 +102,11 @@ def check_flair_helper(submission, posts_replied_to):
                     bot_comment = top_level_comment
                 
 		#checks the comment to see if it has the same author as the post and if they have potential flair
-		if top_level_comment.author == submission.author and re.search("^\[.*\]$", top_level_comment.body):
+		if top_level_comment.author == submission.author and re.search("\[.*\]", top_level_comment.body) is not None:
 			flair_comment = top_level_comment.body
-			flair = flair_comment[1:len(flair_comment) - 1]
+                        flair = flair_comment[flair_comment.find("[")+1:flair_comment.find("]")]
 			
-			#if the flair is valid, the post is flaired, otherwise informt he post of the incorrect flair
+			#if the flair is valid, the post is flaired and comment with confirmation
 			if(check_valid_flair(flair)):
 				top_level_comment.reply(reply_message + flair)
 				submission.mod.flair(text=flair, css_class=flairs[flair])
@@ -118,9 +118,9 @@ def check_flair_helper(submission, posts_replied_to):
         if bot_comment is not None:
             submission.comments.replace_more(limit=0)
             for second_level_comment in bot_comment.replies:
-                if second_level_comment.author == submission.author and re.search("^\[.*\]$", second_level_comment.body):
+                if second_level_comment.author == submission.author and re.search("\[.*\]", second_level_comment.body) is not None:
                     flair_comment = second_level_comment.body
-                    flair = flair_comment[1:len(flair_comment) - 1]
+                    flair = flair_comment[flair_comment.find("[")+1:flair_comment.find("]")]
 
                     if(check_valid_flair(flair)):
                         second_level_comment.reply(reply_message + flair)
@@ -160,8 +160,8 @@ def main():
 	subreddit_name = "grandorder"
 	post_limit = 5 #number of posts to be checked at a time
 	time_limit = 180 #time limit (in seconds) for unflaired post before bot comment
-	drop_time_limit = 3600 #time limit (in seconds) for bot to stop checking a post for a flair
-        message = "Senpai! It seems you've forgotten to properly flair your post, but this kouhai will gladly do it for you. Simply reply to my comment with one of these [flairs](https://i.imgur.com/aMoZ8cl.png) and I'll change it myself. Just put the flair title inside brackets, like so '[Fluff]'.\n\n**I'm a bot-in-training, if you would like to help in my training please reply to me with your desired flair.\nThat fake kouhai will [never see it coming](https://www.myinstants.com/instant/last-surprise-53793/), Senpai.**" #Bot message
+	drop_time_limit = 3900 #time limit (in seconds) for bot to stop checking a post for a flair
+        message = "Senpai! It seems you've forgotten to properly flair your post, but this kouhai will gladly do it for you. Simply reply to my comment with one of these [flairs](https://i.imgur.com/aMoZ8cl.png) and I'll change it myself. Just put the flair title inside brackets, like so '[Fluff]'." #Bot message
 
 	#Do not change below here unless you know your stuff
 	reddit = praw.Reddit(bot)
