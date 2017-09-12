@@ -15,7 +15,7 @@ import sys
 flairs = {'JP News': 's', 'JP Discussion': 's', 'JP PSA': 's', 'JP Spoilers': 's', 'NA News': 't', 'NA PSA': 't',
 	'NA Spoilers': 't', 'NA Discussion': 't', 'News': 'd', 'Tips & Tricks': 'i', 'Fluff': 'b', 'Comic': 'b', 'Guide': 'i', 
 	'PSA': 'k', 'Rumor': 'c', 'WEEKLY RANT': 'j', 'Translated': 'f', 'Story Translation': 'i', 'Discussion': 'i',
-	'Poll': 'i', 'Moderator': 'a', 'Maintenance': 'c', 'Stream': 'a', 'OC': 'b'}
+	'Poll': 'i', 'Moderator': 'a', 'Maintenance': 'c', 'Stream': 'a', 'OC': 'b', 'Cosplay', 'b'}
 
 
 bot_name = "Mashu_Kyrielite"
@@ -161,7 +161,7 @@ def main():
 	post_limit = 5 #number of posts to be checked at a time
 	time_limit = 180 #time limit (in seconds) for unflaired post before bot comment
 	drop_time_limit = 3900 #time limit (in seconds) for bot to stop checking a post for a flair
-        message = "Senpai! It seems you've forgotten to properly flair your post, but this kouhai will gladly do it for you. Simply reply to my comment with one of these [flairs](https://i.imgur.com/aMoZ8cl.png) and I'll change it myself. Just put the flair title inside brackets, like so '[Fluff]'." #Bot message
+        message = "Senpai! It seems you've forgotten to properly flair your post, but this kouhai will gladly do it for you. Simply reply to my comment with one of these [flairs](https://i.imgur.com/HiofxBg.png) and I'll change it myself. Just put the flair title inside brackets, like so '[Fluff]'." #Bot message
 
 	#Do not change below here unless you know your stuff
 	reddit = praw.Reddit(bot)
