@@ -15,7 +15,7 @@ import sys
 flairs = {'JP News': 's', 'JP Discussion': 's', 'JP PSA': 's', 'JP Spoilers': 's', 'NA News': 't', 'NA PSA': 't',
 	'NA Spoilers': 't', 'NA Discussion': 't', 'News': 'd', 'Tips & Tricks': 'i', 'Fluff': 'b', 'Comic': 'b', 'Guide': 'i', 
 	'PSA': 'k', 'Rumor': 'c', 'WEEKLY RANT': 'j', 'Translated': 'f', 'Story Translation': 'i', 'Discussion': 'i',
-	'Poll': 'i', 'Moderator': 'a', 'Maintenance': 'c', 'Stream': 'a', 'OC': 'b', 'Cosplay', 'b'}
+	'Poll': 'i', 'Moderator': 'a', 'Maintenance': 'c', 'Stream': 'a', 'OC': 'b', 'Cosplay': 'b'}
 
 
 bot_name = "Mashu_Kyrielite"
@@ -157,7 +157,7 @@ def check_for_flair(submission, posts_replied_to, message, time_limit, drop_time
 #Main Function
 def main():
 	bot = 'bot1'
-	subreddit_name = "grandorder"
+	subreddit_name = "fgobottest"
 	post_limit = 5 #number of posts to be checked at a time
 	time_limit = 180 #time limit (in seconds) for unflaired post before bot comment
 	drop_time_limit = 3900 #time limit (in seconds) for bot to stop checking a post for a flair
