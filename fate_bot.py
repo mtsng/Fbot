@@ -185,6 +185,10 @@ def main():
 	try:
 		#loops through the post_limit number of new posts
 		for submission in subreddit.new(limit=post_limit):
+			#skip AutoModerator posts
+			if submission.author == "AutoModerator":
+				continue
+		
 			handle_ratelimit(check_for_flair, submission, temp_posts_replied_to, message, time_limit, drop_time_limit)
 		
 		#loops through the visited, unflaired posts for flair comments
